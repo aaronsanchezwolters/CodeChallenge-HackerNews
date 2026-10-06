@@ -3,6 +3,7 @@
     <Project Path="src/HackerNewsBestStories/HackerNewsBestStories.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/HackerNewsBestStories.FunctionalTests/HackerNewsBestStories.FunctionalTests.csproj" />
     <Project Path="tests/HackerNewsBestStories.UnitTests/HackerNewsBestStories.UnitTests.csproj" />
   </Folder>
 </Solution>
