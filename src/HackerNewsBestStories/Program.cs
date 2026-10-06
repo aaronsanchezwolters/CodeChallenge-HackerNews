@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+using HackerNewsBestStories.Api;
 using HackerNewsBestStories.Application;
 using HackerNewsBestStories.Background;
 using HackerNewsBestStories.Infrastructure;
@@ -24,6 +26,9 @@ builder.Services.AddSingleton<IBestStoriesStore, InMemoryBestStoriesStore>();
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddHostedService<BestStoriesRefresher>();
 
+builder.Services.AddValidation();
+builder.Services.AddProblemDetails();
+builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -33,5 +38,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "HackerNewsBestStories API"));
 }
+
+app.MapGetBestStories();
 
 app.Run();
