@@ -1,4 +1,5 @@
 using HackerNewsBestStories.Application;
+using HackerNewsBestStories.Background;
 using HackerNewsBestStories.Infrastructure;
 using Microsoft.Extensions.Options;
 
@@ -9,10 +10,19 @@ builder.Services.AddOptions<HackerNewsOptions>()
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
+builder.Services.AddOptions<BestStoriesOptions>()
+    .BindConfiguration(BestStoriesOptions.SectionName)
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
 builder.Services.AddHttpClient(HackerNewsClient.Name, (provider, httpClient) =>
         httpClient.BaseAddress = provider.GetRequiredService<IOptions<HackerNewsOptions>>().Value.BaseUrl)
     .AddStandardResilienceHandler(); // timeout, retries with backoff and circuit breaker
 builder.Services.AddSingleton<IHackerNewsClient, HackerNewsClient>();
+
+builder.Services.AddSingleton<IBestStoriesStore, InMemoryBestStoriesStore>();
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddHostedService<BestStoriesRefresher>();
 
 builder.Services.AddOpenApi();
 
